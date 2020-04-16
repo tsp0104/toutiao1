@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    toutiao
+    <!-- 一级路由的页面 -->
+    <router-view />
   </div>
 </template>
 
