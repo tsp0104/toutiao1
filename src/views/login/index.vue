@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import local from '@/utils/local'
 export default {
   data () {
     // 校验手机号规则
@@ -40,8 +41,8 @@ export default {
     }
     return {
       LoginForm: {
-        mobile: '',
-        code: ''
+        mobile: '17700007777',
+        code: '246810'
       },
       LoginRules: {
         mobile: [
@@ -58,16 +59,26 @@ export default {
   methods: {
     login () {
       // 对整个表单验证
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
           // 校验成功进行登陆
-          this.$http.post('authorizations', this.LoginForm).then(res => {
-            // 校验成功
+          // this.$http.post('authorizations', this.LoginForm).then(res => {
+          //   // 校验成功
+          //   // 成功 res 是响应对象  res.data 是响应主体
+          //   // 保存用户信息 token
+          //   local.setUser(res.data.data)
+          //   this.$router.push('/')
+          // }).catch(() => {
+          //   // 校验失败 信息
+          //   this.$message.error('手机号或验证码错误')
+          // })
+          try {
+            const { data: { data } } = await this.$http.post('authorizations', this.LoginForm)
+            local.setUser(data)
             this.$router.push('/')
-          }).catch(() => {
-            // 校验失败 信息
+          } catch (e) {
             this.$message.error('手机号或验证码错误')
-          })
+          }
         }
       })
     }
